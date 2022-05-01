@@ -1,0 +1,35 @@
+version: '3'
+services:
+  neo4j:
+    image: neo4j
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4j:/plugins
+    environment:
+      NEO4J_AUTH: none
+      NEO4J_dbms_logs_debug_level: DEBUG
+  
+  postgresDB:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+
+  postgresAdminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+  mongo:
+  image: mongo
+  volumes:
+    - ./:/pc/
+
+volumes:
+  neo4j:
+
+    
+
