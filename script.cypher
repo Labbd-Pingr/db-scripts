@@ -123,6 +123,51 @@ WHERE post1.post_id = 1 AND post2.post_id = 5
 CREATE (post1)-[:REPLY {datetime: datetime()}]->(post2);
 
 
+// ##### QUERIES #####
+
+
+// Retorna os posts de um usuário específico que foram curtidos por um outro usuário específico, sendo que este último foi bloqueado pelo primeiro.
+MATCH (user1:User {account_id: 3}) - [:PUBLISH] -> (post:Post),
+      (user2: User {account_id: 5}) - [:LIKE] -> (post),
+      (user1) - [:BLOCK] -> (user2)
+RETURN user1, user2, post;
+
+// Grau de distância entre dois usuários específicos.
+MATCH path = ((user1:User {account_id: 1}) - [:FOLLOW *] - (:User {account_id: 2}))
+RETURN length(path) as distance
+ORDER BY length(path)
+LIMIT 1;
+
+// Usuários que interagiram com um usuário específico na última semana.
+MATCH (user1:User {account_id: 1}) - [:PUBLISH] -> (post:Post)
+OPTIONAL MATCH (user2:User) - [int:LIKE] -> (post)
+WHERE int.datetime >= datetime()-duration('P7D')
+WITH collect(distinct user2) as c1
+
+OPTIONAL MATCH (user3:User) - [int2:PUBLISH] -> (post2:Post),
+               (post2) - -> (post)
+WHERE int2.datetime >= datetime()-duration('P7D')
+WITH collect(distinct user3) + c1 as c2
+
+UNWIND c2 as users
+RETURN DISTINCT users;
+
+// Usuários que publicam mais que N =5 valores em um intervalo M de horas.
+WITH 5 as N, duration({hours: 5}) as M
+
+MATCH (user:User) - [int:PUBLISH] -> (post:Post)
+WHERE  int.datetime >= datetime()-M
+WITH user as user, N as N, count(post) as numOfPosts
+WHERE numOfPosts > N
+RETURN DISTINCT user;
+
+// Dado um post específico, retorna a maior profundidade de compartilhamento.
+MATCH (post:Post {post_id: 5}),
+      path = ((post2:Post) - [:SHARE *] -> (post))
+RETURN length(path) as depth
+ORDER BY length(path) DESC
+LIMIT 1;
+
 //Apagar todas as relações e nós:
 //MATCH (n) DETACH DELETE n;
 
