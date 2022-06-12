@@ -20,16 +20,25 @@ services:
     environment:
       POSTGRES_PASSWORD: example
 
-  mongo:
-    image: mongo
-    volumes:
-      - mongo:/data/db
-
   adminer:
     image: adminer
     restart: always
     ports:
       - 8080:8080
+
+  mongo:
+    image: mongo
+    volumes:
+      - mongo:/data/db
+      - ./script.js:/script.js
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://mongo:27017/
 
 volumes:
   neo4j:
