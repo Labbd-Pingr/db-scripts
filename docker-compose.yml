@@ -48,6 +48,7 @@ services:
     restart: always
     volumes:
       - redis:/data
+      - ./script.lua:/script.lua
 
   redis-commander:
     image: rediscommander/redis-commander:latest
