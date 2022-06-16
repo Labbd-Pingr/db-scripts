@@ -51,7 +51,7 @@ INSERT INTO Hashtag (hashtag) values ('SeráQueFunciona?');
 
 -- Queries
 
--- Exiba o perfil de uma conta
+-- Exibe o perfil de todas as contas do sistema
 SELECT *
 FROM Profile as P
 JOIN Account as A ON P.id = A.profile_id; 
@@ -62,13 +62,14 @@ FROM Profile
 WHERE birth_date >= '2001-01-01' AND birth_date <= '2001-12-31';
 
 -- Exiba todas as hashtags que foram usadas no dia, ordenadas pela sua frequência
-SELECT hashtag
+SELECT hashtag, daily_counter
 FROM Hashtag
 WHERE daily_counter > 0
 ORDER BY daily_counter;
 
 -- Exiba todas as hashtags, ordenadas pela sua frequência global
-SELECT hashtag
+-- Obs: Todas devem retornar 0 pois o processamento de incrementar a variável global será implementado no sistema.
+SELECT hashtag, global_counter
 FROM Hashtag
 ORDER BY global_counter;
 
