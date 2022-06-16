@@ -34,6 +34,7 @@ services:
     restart: always
     volumes:
       - mongo:/data/db
+      - ./script.js:/script.js
 
   mongo-express:
     image: mongo-express

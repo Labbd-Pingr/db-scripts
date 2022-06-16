@@ -1,5 +1,7 @@
 db = db.getMongo().getDB("pingr--");
 
+// Inserção
+
 db.post.insertMany([
   {post_id: 1, profile_id: 1, date: Date.now(), text: {text: "Acordei bobo hoje"}},
   {post_id: 2, profile_id: 2, date: Date.now(), text: {text: "Também quero dar opiniões #MonologoNão", hashtags: ["#MonologoNão"]}},
